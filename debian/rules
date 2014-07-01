@@ -4,6 +4,9 @@
 %:
 	dh $@
 
-override_dh_auto_configure:
+configure: configure.ac Makefile.am
+	autoreconf -i
+
+override_dh_auto_configure: configure
 	dh_auto_configure -- --without-included-libedit --without-included-liburi
 
