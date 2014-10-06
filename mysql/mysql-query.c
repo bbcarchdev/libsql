@@ -69,7 +69,7 @@ sql_mysql_execute_(SQL *restrict me, const char *restrict statement, void *restr
 int
 sql_mysql_begin_(SQL *me, SQL_TXN_MODE mode)
 {
-	const char *st = "START TRANSACTION";
+	const char *st;
 	int r;
 	
 	if(me->depth)	
@@ -77,10 +77,6 @@ sql_mysql_begin_(SQL *me, SQL_TXN_MODE mode)
 		/* Can't nest transactions */
 		sql_mysql_set_error_(me, "25000", "You are not allowed to execute this command in a transaction");
 		return -1;
-	}
-	if(me->querylog)
-	{
-		me->querylog(me, st);
 	}
 	switch(mode)
 	{
@@ -90,6 +86,10 @@ sql_mysql_begin_(SQL *me, SQL_TXN_MODE mode)
 	default:
 		st = "START TRANSACTION";
 		break;
+	}
+	if(me->querylog)
+	{
+		me->querylog(me, st);
 	}
 	r = mysql_query(&(me->mysql), st);
 	if(r)
