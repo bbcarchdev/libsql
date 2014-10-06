@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -62,7 +67,7 @@ sql_mysql_execute_(SQL *restrict me, const char *restrict statement, void *restr
 }
 
 int
-sql_mysql_begin_(SQL *me)
+sql_mysql_begin_(SQL *me, SQL_TXN_MODE mode)
 {
 	const char *st = "START TRANSACTION";
 	int r;
@@ -76,6 +81,15 @@ sql_mysql_begin_(SQL *me)
 	if(me->querylog)
 	{
 		me->querylog(me, st);
+	}
+	switch(mode)
+	{
+	case SQL_TXN_CONSISTENT:
+		st = "START TRANSACTION WITH CONSISTENT SNAPSHOT";
+		break;
+	default:
+		st = "START TRANSACTION";
+		break;
 	}
 	r = mysql_query(&(me->mysql), st);
 	if(r)

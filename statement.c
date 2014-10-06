@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -216,9 +221,9 @@ sql_stmt_vexecf(SQL_STATEMENT *stmt, va_list ap)
 }
 
 int
-sql_begin(SQL *sql)
+sql_begin(SQL *sql, SQL_TXN_MODE mode)
 {
-	return sql->api->begin(sql);
+	return sql->api->begin(sql, mode);
 }
 
 int
@@ -275,7 +280,7 @@ sql_rollback(SQL *sql)
  * end while
  */
 int
-sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int maxretries)
+sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int maxretries, SQL_TXN_MODE mode)
 {
 	int count, r;
 	
@@ -283,7 +288,7 @@ sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int 
 	while(maxretries < 0 || count < maxretries)
 	{
 		count++;
-		if(sql_begin(sql))
+		if(sql_begin(sql, mode))
 		{
 			return -1;
 		}

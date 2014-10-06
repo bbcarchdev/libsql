@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -27,6 +32,12 @@ typedef int (*SQL_PERFORM_TXN)(SQL *restrict, void *restrict userdata);
 typedef int (*SQL_PERFORM_MIGRATE)(SQL *restrict sql, const char *identifier, int newversion, void *restrict userdata);
 typedef int (*SQL_LOG_QUERY)(SQL *restrict sql, const char *query);
 typedef int (*SQL_LOG_ERROR)(SQL *restrict sql, const char *sqlstate, const char *message);
+
+typedef enum
+{
+	SQL_TXN_DEFAULT,
+	SQL_TXN_CONSISTENT
+} SQL_TXN_MODE;
 
 # if (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L) && !defined(restrict)
 #  define restrict
@@ -91,11 +102,11 @@ extern "C" {
 	size_t sql_field_width(SQL_FIELD *field);
 	
 	/* Transaction handling */
-	int sql_begin(SQL *sql);
+	int sql_begin(SQL *sql, SQL_TXN_MODE mode);
 	int sql_commit(SQL *sql);
 	int sql_rollback(SQL *sql);
 	int sql_deadlocked(SQL *sql);
-	int sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int maxretries);
+	int sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int maxretries, SQL_TXN_MODE mode);
 	
 	/* Schema migration */
 	int sql_migrate(SQL *restrict sql, const char *restrict identifier, SQL_PERFORM_MIGRATE fn, void *userdata);

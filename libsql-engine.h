@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -57,7 +62,7 @@ struct sql_api_struct
 	int (*connect)(SQL *restrict me, URI *restrict uri);
 	int (*execute)(SQL *restrict me, const char *restrict statement, void *restrict *restrict data);
 	SQL_STATEMENT *(*statement)(SQL *restrict me, const char *restrict statement);
-	int (*begin)(SQL *me);
+	int (*begin)(SQL *me, SQL_TXN_MODE mode);
 	int (*commit)(SQL *me);
 	int (*rollback)(SQL *me);
 	int (*deadlocked)(SQL *me);

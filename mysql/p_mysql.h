@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -103,7 +108,7 @@ unsigned long sql_field_mysql_free_(SQL_FIELD *me);
 const char *sql_field_mysql_name_(SQL_FIELD *me);
 size_t sql_field_mysql_width_(SQL_FIELD *me);
 
-int sql_mysql_begin_(SQL *me);
+int sql_mysql_begin_(SQL *me, SQL_TXN_MODE mode);
 int sql_mysql_commit_(SQL *me);
 int sql_mysql_rollback_(SQL *me);
 int sql_mysql_deadlocked_(SQL *me);

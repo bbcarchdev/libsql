@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2014 BBC.
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -50,7 +55,7 @@ sql_migrate(SQL *restrict sql, const char *restrict identifier, SQL_PERFORM_MIGR
 	prev = -1;
 	while(data.current < data.target)
 	{
-		if(sql_perform(sql, sql_migrate_txn_, &data, 10))
+		if(sql_perform(sql, sql_migrate_txn_, &data, 10, SQL_TXN_CONSISTENT))
 		{
 			return -1;
 		}
