@@ -94,7 +94,7 @@ sql_pg_begin_(SQL *me, SQL_TXN_MODE mode)
 	switch(mode)
 	{
 	case SQL_TXN_CONSISTENT:
-		st = "START TRANSACTION ISOLATION MODE REPEATABLE READ";
+		st = "START TRANSACTION ISOLATION LEVEL REPEATABLE READ";
 		break;
 	default:
 		st = "START TRANSACTION";
