@@ -57,7 +57,7 @@ sql_pg_execute_(SQL *restrict me, const char *restrict statement, void *restrict
 	if(resultdata)
 	{
 		*resultdata = NULL;
-		if(status == PGRES_TUPLES_OK || status == PGRES_SINGLE_TUPLE)
+		if(status == PGRES_TUPLES_OK)
 		{
 			*resultdata = res;
 		}

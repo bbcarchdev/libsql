@@ -35,7 +35,7 @@
 # include <libsql-engine.h>
 
 # define PQSTATUS_SUCCESS(r) \
-	(r == PGRES_EMPTY_QUERY || r == PGRES_COMMAND_OK || r == PGRES_TUPLES_OK || r == PGRES_COPY_OUT || r == PGRES_COPY_IN || r == PGRES_SINGLE_TUPLE)
+	(r != PGRES_BAD_RESPONSE && r != PGRES_FATAL_ERROR)
 
 struct sql_engine_struct
 {
