@@ -64,7 +64,7 @@ if test x"$have_libpq" = x"yes" ; then
    ENGINE_LIBS="$ENGINE_LIBS postgres/libpostgres-engine.la"
    ENGINE_DEPLIBS="$ENGINE_DEPLIBS $LIBPQ_LIBS"
 else
-	engine_pgsql="no"
+	engine_postgres="no"
 fi
 
 AC_SUBST([ENGINE_LIBS])
