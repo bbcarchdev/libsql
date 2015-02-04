@@ -21,6 +21,9 @@
 
 #include "p_postgres.h"
 
+
+static void notice_processor(void *arg, const char *message);
+
 /* TODO:
  *   percent-decode components
  *   connection options
@@ -74,10 +77,12 @@ sql_pg_connect_(SQL *me, URI *uri)
 	if(status != CONNECTION_OK)
 	{
 		sql_pg_set_error_(me, "57P03", PQerrorMessage(me->pg));
+		PQfinish(me->pg);
+		me->pg = NULL;
 		return -1;
 	}
+	PQsetNoticeProcessor(me->pg, notice_processor, (void *) me);
 	PQsetClientEncoding(me->pg, "UTF8");
-	
 	return 0;
 }
 
@@ -155,4 +160,40 @@ sql_pg_set_errorlog_(SQL *sql, SQL_LOG_ERROR fn)
 {
 	sql->errorlog = fn;
 	return 0;
+}
+
+int
+sql_pg_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn)
+{
+	sql->noticelog = fn;
+	return 0;
+}
+
+SQL_LANG
+sql_pg_lang_(SQL *sql)
+{
+	(void) sql;
+
+	return SQL_LANG_SQL;
+}
+
+SQL_VARIANT
+sql_pg_variant_(SQL *sql)
+{
+	(void) sql;
+
+	return SQL_VARIANT_POSTGRES;
+}
+
+
+static void
+notice_processor(void *arg, const char *message)
+{
+	SQL *sql;
+
+	sql = (SQL *) arg;
+	if(sql->noticelog)
+	{
+		sql->noticelog(sql, message);
+	}
 }

@@ -149,3 +149,28 @@ sql_mysql_set_errorlog_(SQL *sql, SQL_LOG_ERROR fn)
 	sql->errorlog = fn;
 	return 0;
 }
+
+int
+sql_mysql_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn)
+{
+	(void) sql;
+	(void) fn;
+
+	return 0;
+}
+
+SQL_LANG
+sql_mysql_lang_(SQL *sql)
+{
+	(void) sql;
+
+	return SQL_LANG_SQL;
+}
+
+SQL_VARIANT
+sql_mysql_variant_(SQL *sql)
+{
+	(void) sql;
+
+	return SQL_VARIANT_MYSQL;
+}

@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright 2014 BBC.
+ * Copyright 2014-2015 BBC.
  */
 
 /*
@@ -71,6 +71,9 @@ struct sql_api_struct
 	int (*schema_create_table)(SQL *me);
 	int (*set_querylog)(SQL *me, SQL_LOG_QUERY fn);
 	int (*set_errorlog)(SQL *me, SQL_LOG_ERROR fn);
+	int (*set_noticelog)(SQL *me, SQL_LOG_NOTICE fn);
+	SQL_LANG (*lang)(SQL *me);
+	SQL_VARIANT (*variant)(SQL *variant);
 };
 
 /* API provided on statements */

@@ -54,6 +54,7 @@ struct sql_struct
 	size_t qbuflen;
 	SQL_LOG_QUERY querylog;
 	SQL_LOG_ERROR errorlog;
+	SQL_LOG_NOTICE noticelog;
 };
 
 struct sql_statement_struct
@@ -123,5 +124,9 @@ int sql_pg_schema_set_version_(SQL *me, const char *identifier, int version);
 
 int sql_pg_set_querylog_(SQL *sql, SQL_LOG_QUERY fn);
 int sql_pg_set_errorlog_(SQL *sql, SQL_LOG_ERROR fn);
+int sql_pg_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn);
+
+SQL_LANG sql_pg_lang_(SQL *sql);
+SQL_VARIANT sql_pg_variant_(SQL *sql);
 
 #endif /*!P_POSTGRES_H_*/

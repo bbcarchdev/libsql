@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright 2014 BBC.
+ * Copyright 2014-2015 BBC.
  */
 
 /*
@@ -119,5 +119,9 @@ int sql_mysql_schema_set_version_(SQL *me, const char *identifier, int version);
 
 int sql_mysql_set_querylog_(SQL *sql, SQL_LOG_QUERY fn);
 int sql_mysql_set_errorlog_(SQL *sql, SQL_LOG_ERROR fn);
+int sql_mysql_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn);
+
+SQL_LANG sql_mysql_lang_(SQL *sql);
+SQL_VARIANT sql_mysql_variant_(SQL *sql);
 
 #endif /*!P_MYSQL_H_*/

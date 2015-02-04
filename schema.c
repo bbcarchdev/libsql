@@ -31,6 +31,7 @@ struct migrate_data
 	int current;
 	const char *identifier;
 	SQL_PERFORM_MIGRATE fn;
+	int table_created;
 	void *userdata;
 };
 
@@ -52,6 +53,7 @@ sql_migrate(SQL *restrict sql, const char *restrict identifier, SQL_PERFORM_MIGR
 	data.identifier = identifier;
 	data.fn = fn;
 	data.userdata = userdata;
+	data.table_created = 0;
 	prev = -1;
 	while(data.current < data.target)
 	{
@@ -65,6 +67,7 @@ sql_migrate(SQL *restrict sql, const char *restrict identifier, SQL_PERFORM_MIGR
 			return -1;
 		}
 		prev = data.current;
+		data.table_created = 1;
 	}
 	return 0;
 }
@@ -77,17 +80,20 @@ sql_migrate_txn_(SQL *sql, void *userdata)
 	int v;
 	
 	data = (struct migrate_data *) userdata;
-	
-	v = sql->api->schema_create_table(sql);
-	if(sql->api->deadlocked(sql))
+
+	if(!data->table_created)
 	{
-		/* Re-try the transaction */
-		return -1;
-	}
-	if(v == -1)
-	{
-		/* Creation failed */
-		return -2;
+		v = sql->api->schema_create_table(sql);
+		if(sql->api->deadlocked(sql))
+		{
+			/* Re-try the transaction */
+			return -1;
+		}
+		if(v == -1)
+		{
+			/* Creation failed */
+			return -2;
+		}
 	}
 	/* Confirm current version */
 	v = sql->api->schema_get_version(sql, data->identifier);

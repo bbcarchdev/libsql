@@ -120,3 +120,22 @@ sql_set_errorlog(SQL *sql, SQL_LOG_ERROR fn)
 {
 	return sql->api->set_errorlog(sql, fn);
 }
+
+int
+sql_set_noticelog(SQL *sql, SQL_LOG_NOTICE fn)
+{
+	return sql->api->set_noticelog(sql, fn);
+}
+
+/* Return information about the connection */
+SQL_LANG
+sql_lang(SQL *sql)
+{
+	return sql->api->lang(sql);
+}
+
+SQL_VARIANT
+sql_variant(SQL *sql)
+{
+	return sql->api->variant(sql);
+}

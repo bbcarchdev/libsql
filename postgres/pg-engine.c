@@ -55,7 +55,10 @@ static SQL_API pg_api = {
 	sql_pg_schema_set_version_,
 	sql_pg_schema_create_table_,
 	sql_pg_set_querylog_,
-	sql_pg_set_errorlog_
+	sql_pg_set_errorlog_,
+	sql_pg_set_noticelog_,
+	sql_pg_lang_,
+	sql_pg_variant_
 };
 
 SQL_ENGINE *

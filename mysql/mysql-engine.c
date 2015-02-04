@@ -54,7 +54,10 @@ static SQL_API mysql_api = {
 	sql_mysql_schema_set_version_,
 	sql_mysql_schema_create_table_,
 	sql_mysql_set_querylog_,
-	sql_mysql_set_errorlog_
+	sql_mysql_set_errorlog_,
+	sql_mysql_set_noticelog_,
+	sql_mysql_lang_,
+	sql_mysql_variant_
 };
 
 SQL_ENGINE *
