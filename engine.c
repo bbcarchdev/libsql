@@ -1,3 +1,8 @@
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright (c) 2015 BBC
+ */
+
 /*
  * Copyright 2012-2013 Mo McRoberts.
  *
@@ -21,7 +26,7 @@
 #include "p_libsql.h"
 
 SQL_ENGINE *sql_mysql_engine(void);
-
+SQL_ENGINE *sql_postgres_engine(void);
 
 SQL_ENGINE *
 sql_engine_(URI *uri)
@@ -43,6 +48,10 @@ sql_engine_(URI *uri)
 	if(!strcmp(scheme, "mysql") || !strcmp(scheme, "mysqls"))
 	{
 		return sql_mysql_engine();
+	}
+	if(!strcmp(scheme, "pgsql"))
+	{
+		return sql_postgres_engine();
 	}
 	sql_set_error_("08000", "The specified URI scheme is not supported by any client engine");
 	return NULL;

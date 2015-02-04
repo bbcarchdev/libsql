@@ -1,3 +1,7 @@
+## Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+##
+## Copyright 2015 BBC
+
 ## Copyright 2012-2013 Mo McRoberts.
 ##
 ##  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +18,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-DIST_SUBDIRS = m4 libedit mysql
+DIST_SUBDIRS = m4 libedit mysql postgres
 
 SUBDIRS = @subdirs@ @ENGINE_SUBDIRS@ .
 
