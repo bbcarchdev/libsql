@@ -25,10 +25,10 @@
 
 #define SCHEMA_SQL \
 	"CREATE TABLE IF NOT EXISTS \"_version\" (" \
-	"\"ident\" VARCHAR(64) NOT NULL COMMENT 'Module identifier', " \
-	"\"version\" BIGINT UNSIGNED NOT NULL COMMENT 'Current schema version'," \
-	"\"updated\" DATETIME NOT NULL COMMENT 'Timestamp of the last schema update'," \
-	"\"comment\" TEXT DEFAULT NULL COMMENT 'Description of the last update'," \
+	"\"ident\" VARCHAR(64) NOT NULL, " \
+	"\"version\" INTEGER NOT NULL, " \
+	"\"updated\" TIMESTAMP NOT NULL, " \
+	"\"comment\" TEXT DEFAULT NULL, " \
 	"PRIMARY KEY (\"ident\")" \
 	")"
 
@@ -155,6 +155,7 @@ sql_pg_schema_select_version_(SQL *me, const char *identifier, size_t idlen, int
 	status = PQresultStatus(res);
 	if(!PQSTATUS_SUCCESS(status))
 	{
+		
 		sql_pg_copy_error_(me, res);
 		return -1;
 	}

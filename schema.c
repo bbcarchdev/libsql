@@ -77,7 +77,18 @@ sql_migrate_txn_(SQL *sql, void *userdata)
 	int v;
 	
 	data = (struct migrate_data *) userdata;
-
+	
+	v = sql->api->schema_create_table(sql);
+	if(sql->api->deadlocked(sql))
+	{
+		/* Re-try the transaction */
+		return -1;
+	}
+	if(v == -1)
+	{
+		/* Creation failed */
+		return -2;
+	}
 	/* Confirm current version */
 	v = sql->api->schema_get_version(sql, data->identifier);
 	if(sql->api->deadlocked(sql))
@@ -87,13 +98,13 @@ sql_migrate_txn_(SQL *sql, void *userdata)
 	}
 	if(v == -1)
 	{
-		if(strcmp(sql->api->sqlstate(sql), "42S02"))
+		if(strcmp(sql->api->sqlstate(sql), "42S02") &&
+		   strcmp(sql->api->sqlstate(sql), "42P01"))
 		{
 			/* SQLSTATE is not "table does not exist", abort */
 			return -2;
 		}
 		/* Table doesn't exist */
-		v = sql->api->schema_create_table(sql);
 		if(sql->api->deadlocked(sql))
 		{		
 			return -1;
