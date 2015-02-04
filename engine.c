@@ -45,14 +45,18 @@ sql_engine_(URI *uri)
 		sql_set_error_("08000", "The specified URI scheme is not supported by any client engine");
 		return NULL;
 	}
+#ifdef WITH_MYSQL
 	if(!strcmp(scheme, "mysql") || !strcmp(scheme, "mysqls"))
 	{
 		return sql_mysql_engine();
 	}
+#endif
+#ifdef WITH_LIBPQ
 	if(!strcmp(scheme, "pgsql"))
 	{
 		return sql_postgres_engine();
 	}
+#endif
 	sql_set_error_("08000", "The specified URI scheme is not supported by any client engine");
 	return NULL;
 }
