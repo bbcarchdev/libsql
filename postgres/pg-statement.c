@@ -168,15 +168,6 @@ sql_statement_pg_next_(SQL_STATEMENT *me)
 	{
 		return 0;
 	}
-	if(me->cur == (unsigned long long) -1)
-	{
-		if(me->rows)
-		{
-			me->cur = 0;
-			return 1;
-		}
-		return 0;
-	}	   
 	me->cur++;
 	if(me->cur >= me->rows)
 	{
@@ -196,11 +187,11 @@ sql_statement_pg_value_(SQL_STATEMENT *restrict me, unsigned int col, char *rest
 	{
 		*buf = 0;
 	}
-	l = PQgetlength(me->result, me->cur, col);
-	if(!me->cur || col >= me->columns)
+	if(me->cur >= me->rows || col >= me->columns)
 	{
 		return 0;
 	}
+	l = PQgetlength(me->result, me->cur, col);
 	if(buf)
 	{
 		if(l >= buflen)
