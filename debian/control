@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 8.0.0), libedit-dev, libmysqlclient-dev, liburi-dev
 
 Package: libsql
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libedit2, libmysqlclient18, liburi, libuuid1, libpq
+Depends: ${misc:Depends}, ${shlibs:Depends}, libedit2, libmysqlclient18, liburi, libuuid1, libpq5
 Description: SQL client library
 
 Package: libsql-dev
@@ -18,4 +18,3 @@ Package: sql-utils
 Architecture: any
 Depends: ${misc:Depends}, libsql
 Description: SQL client library (command-line utilities)
-
