@@ -196,7 +196,7 @@ sql_statement_pg_value_(SQL_STATEMENT *restrict me, unsigned int col, char *rest
 	{
 		if(l >= buflen)
 		{
-			l = buflen;
+			l = buflen - 1;
 		}
 		value = PQgetvalue(me->result, me->cur, col);
 		if(!value)
