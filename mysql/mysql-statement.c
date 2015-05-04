@@ -206,7 +206,7 @@ sql_statement_mysql_value_(SQL_STATEMENT *restrict me, unsigned int col, char *r
 		l = me->lengths[col];
 		if(l >= buflen)
 		{
-			l = buflen;
+			l = buflen - 1;
 		}
 		memcpy(buf, me->row[col], l);
 		buf[l] = 0;
