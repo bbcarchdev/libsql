@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright 2014 BBC.
+ * Copyright 2014-2015 BBC.
  */
 
 /*
@@ -180,6 +180,38 @@ size_t
 sql_stmt_value(SQL_STATEMENT *restrict stmt, unsigned int col, char *restrict buf, size_t buflen)
 {
 	return stmt->api->value(stmt, col, buf, buflen);
+}
+
+const char *
+sql_stmt_str(SQL_STATEMENT *stmt, unsigned int col)
+{
+	return (const char *) stmt->api->valueptr(stmt, col);
+}
+
+long
+sql_stmt_long(SQL_STATEMENT *stmt, unsigned int col)
+{
+	const char *s;
+
+	s = (const char *) stmt->api->valueptr(stmt, col);
+	if(!s)
+	{
+		return 0;
+	}
+	return strtol(s, NULL, 10);
+}
+
+unsigned long
+sql_stmt_ulong(SQL_STATEMENT *stmt, unsigned int col)
+{
+	const char *s;
+
+	s = (const char *) stmt->api->valueptr(stmt, col);
+	if(!s)
+	{
+		return 0;
+	}
+	return strtoul(s, NULL, 10);
 }
 
 int

@@ -111,7 +111,10 @@ extern "C" {
 	SQL_FIELD *sql_stmt_field(SQL_STATEMENT *statement, unsigned int col);	
 	int sql_stmt_null(SQL_STATEMENT *statement, unsigned int col);
 	size_t sql_stmt_value(SQL_STATEMENT *restrict statement, unsigned int col, char *restrict buf, size_t buflen);
-	
+	const char *sql_stmt_str(SQL_STATEMENT *statement, unsigned int col);
+	long sql_stmt_long(SQL_STATEMENT *statement, unsigned int col);
+	unsigned long sql_stmt_ulong(SQL_STATEMENT *statement, unsigned int col);
+
 	/* Return the name of a column */
 	int sql_field_destroy(SQL_FIELD *field);
 	const char *sql_field_name(SQL_FIELD *field);
