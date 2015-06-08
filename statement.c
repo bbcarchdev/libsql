@@ -140,6 +140,12 @@ sql_stmt_destroy(SQL_STATEMENT *stmt)
 	return stmt->api->release(stmt);
 }
 
+int
+sql_stmt_rewind(SQL_STATEMENT *stmt)
+{
+	return stmt->api->rewind(stmt);
+}
+
 unsigned int
 sql_stmt_columns(SQL_STATEMENT *stmt)
 {
