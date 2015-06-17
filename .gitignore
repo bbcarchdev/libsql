@@ -26,6 +26,7 @@ Makefile
 /config.h
 /aclocal.m4
 /depcomp
+/compile
 /missing
 /autom4te.cache
 
