@@ -52,7 +52,7 @@ sql_engine_(URI *uri)
 	}
 #endif
 #ifdef WITH_LIBPQ
-	if(!strcmp(scheme, "pgsql"))
+	if(!strcmp(scheme, "pgsql") || !strcmp(scheme, "postgresql"))
 	{
 		return sql_postgres_engine();
 	}
