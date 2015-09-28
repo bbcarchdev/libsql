@@ -38,7 +38,6 @@ AC_CHECK_HEADERS([limits.h stddef.h])
 
 BT_PROG_CC_WARN
 BT_DEFINE_PREFIX
-BT_REQUIRE_LIBURI_INCLUDED
 BT_REQUIRE_LIBUUID
 
 dnl libedit is used only by isql, don't include it in the ordinary libs
@@ -70,6 +69,9 @@ fi
 AC_SUBST([ENGINE_LIBS])
 AC_SUBST([ENGINE_SUBDIRS])
 AC_SUBST([ENGINE_DEPLIBS])
+
+BT_REQUIRE_LIBURI_INCLUDED
+
 
 AC_CONFIG_FILES([Makefile
 m4/Makefile
