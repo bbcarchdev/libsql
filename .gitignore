@@ -29,4 +29,4 @@ Makefile
 /compile
 /missing
 /autom4te.cache
-
+/libsql.la.orig

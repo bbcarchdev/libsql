@@ -24,6 +24,8 @@ SUBDIRS = @subdirs@ @ENGINE_SUBDIRS@ .
 
 DISTCLEANFILES = libsql.pc libsql-uninstalled.pc
 
+CLEANFILES = libsql.la.orig
+
 pkgconfigdir = $(libdir)/pkgconfig
 
 pkgconfig_DATA = libsql.pc
@@ -54,8 +56,14 @@ mysql-darwin-fixups-stamp: isql libsql.la
 	if test x"${mysql_darwin_fixups}" = x"yes" ; then \
 		install_name_tool -change libmysqlclient_r.18.dylib ${MYSQL_LIBDIR}/libmysqlclient_r.18.dylib -change libmysqlclient.18.dylib ${MYSQL_LIBDIR}/libmysqlclient.18.dylib .libs/libsql.dylib ; \
 		install_name_tool -change libmysqlclient_r.18.dylib ${MYSQL_LIBDIR}/libmysqlclient_r.18.dylib -change libmysqlclient.18.dylib ${MYSQL_LIBDIR}/libmysqlclient.18.dylib .libs/isql ; \
+		mv libsql.la libsql.la.orig && sed "s@^dependency_libs=.*\$$@dependency_libs=''@" < libsql.la.orig > libsql.la ; \
 	fi
 	touch $@
+
+install-exec-hook:
+	if test x"${mysql_darwin_fixups}" = x"yes" ; then \
+		mv $(DESTDIR)$(libdir)/libsql.la $(DESTDIR)$(libdir)/libsql.la.orig && sed "s@^dependency_libs=.*\$$@dependency_libs=''@" < $(DESTDIR)$(libdir)/libsql.la.orig > $(DESTDIR)$(libdir)/libsql.la && rm $(DESTDIR)$(libdir)/libsql.la.orig ; \
+	fi
 
 BRANCH ?= develop
 

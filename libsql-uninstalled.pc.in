@@ -7,5 +7,5 @@ Name: @PACKAGE_NAME@ (uninstalled)
 Description: @PACKAGE_DESC@
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lsql @ENGINE_DEPLIBS@
+Libs: -L${libdir} -lsql
 Cflags: -I${includedir}
