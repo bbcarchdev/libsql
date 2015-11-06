@@ -83,3 +83,14 @@ sql_engine_(URI *uri)
 	return NULL;
 }
 
+int
+sql_set_userdata(SQL *restrict sql, void *restrict data)
+{
+	return sql->api->set_userdata(sql, data);
+}
+
+void *
+sql_userdata(SQL *sql)
+{
+	return sql->api->userdata(sql);
+}

@@ -58,7 +58,9 @@ static SQL_API pg_api = {
 	sql_pg_set_errorlog_,
 	sql_pg_set_noticelog_,
 	sql_pg_lang_,
-	sql_pg_variant_
+	sql_pg_variant_,
+	sql_pg_set_userdata_,
+	sql_pg_userdata_
 };
 
 SQL_ENGINE *
@@ -117,4 +119,17 @@ sql_pg_free_(SQL *me)
 	free(me->qbuf);
 	free(me);
 	return 0;
+}
+
+int
+sql_pg_set_userdata_(SQL *restrict me, void *restrict userdata)
+{
+	me->userdata = userdata;
+	return 0;
+}
+
+void *
+sql_pg_userdata_(SQL *me)
+{
+	return me->userdata;
 }

@@ -64,6 +64,9 @@ extern "C" {
 	int sql_disconnect(SQL *sql);
 	int sql_scheme_exists(const char *urischeme);
 
+	int sql_set_userdata(SQL *restrict sql, void *restrict data);
+	void *sql_userdata(SQL *sql);
+
 	SQL_LANG sql_lang(SQL *sql);
 	SQL_VARIANT sql_variant(SQL *sql);
 

@@ -55,6 +55,7 @@ struct sql_struct
 	SQL_LOG_QUERY querylog;
 	SQL_LOG_ERROR errorlog;
 	SQL_LOG_NOTICE noticelog;
+	void *userdata;
 };
 
 struct sql_statement_struct
@@ -128,5 +129,8 @@ int sql_pg_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn);
 
 SQL_LANG sql_pg_lang_(SQL *sql);
 SQL_VARIANT sql_pg_variant_(SQL *sql);
+
+int sql_pg_set_userdata_(SQL *restrict sql, void *restrict userdata);
+void *sql_pg_userdata_(SQL *sql);
 
 #endif /*!P_POSTGRES_H_*/

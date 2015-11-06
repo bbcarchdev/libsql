@@ -57,7 +57,9 @@ static SQL_API mysql_api = {
 	sql_mysql_set_errorlog_,
 	sql_mysql_set_noticelog_,
 	sql_mysql_lang_,
-	sql_mysql_variant_
+	sql_mysql_variant_,
+	sql_mysql_set_userdata_,
+	sql_mysql_userdata_,
 };
 
 SQL_ENGINE *
@@ -121,3 +123,17 @@ sql_mysql_free_(SQL *me)
 	free(me);
 	return 0;
 }
+
+int
+sql_mysql_set_userdata_(SQL *restrict me, void *restrict userdata)
+{
+	me->userdata = userdata;
+	return 0;
+}
+
+void *
+sql_mysql_userdata_(SQL *me)
+{
+	return me->userdata;
+}
+

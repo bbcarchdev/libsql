@@ -50,6 +50,7 @@ struct sql_struct
 	size_t qbuflen;
 	SQL_LOG_QUERY querylog;
 	SQL_LOG_ERROR errorlog;
+	void *userdata;
 };
 
 struct sql_statement_struct
@@ -123,5 +124,8 @@ int sql_mysql_set_noticelog_(SQL *sql, SQL_LOG_NOTICE fn);
 
 SQL_LANG sql_mysql_lang_(SQL *sql);
 SQL_VARIANT sql_mysql_variant_(SQL *sql);
+
+int sql_mysql_set_userdata_(SQL *restrict sql, void *restrict userdata);
+void *sql_mysql_userdata_(SQL *sql);
 
 #endif /*!P_MYSQL_H_*/

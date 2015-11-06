@@ -74,6 +74,8 @@ struct sql_api_struct
 	int (*set_noticelog)(SQL *me, SQL_LOG_NOTICE fn);
 	SQL_LANG (*lang)(SQL *me);
 	SQL_VARIANT (*variant)(SQL *variant);
+	int (*set_userdata)(SQL *restrict me, void *restrict userdata);
+	void *(*userdata)(SQL *me);
 };
 
 /* API provided on statements */
