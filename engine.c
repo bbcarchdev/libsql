@@ -28,6 +28,28 @@
 SQL_ENGINE *sql_mysql_engine(void);
 SQL_ENGINE *sql_postgres_engine(void);
 
+/* Note that until there's any sort of dynamic registration (or even a
+ * static list), the matching here must be kept in sync with sql_engine_(),
+ * below.
+ */
+int
+sql_scheme_exists(const char *urischeme)
+{
+#ifdef WITH_MYSQL
+	if(!strcmp(urischeme, "mysql") || !strcmp(urischeme, "mysqls"))
+	{
+		return 1;
+	}
+#endif
+#ifdef WITH_LIBPQ
+	if(!strcmp(urischeme, "pgsql") || !strcmp(urischeme, "postgresql"))
+	{
+		return 1;
+	}
+#endif
+	return 0;
+}
+
 SQL_ENGINE *
 sql_engine_(URI *uri)
 {

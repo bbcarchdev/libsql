@@ -62,6 +62,7 @@ extern "C" {
 	SQL *sql_connect(const char *uri);
 	SQL *sql_connect_uri(URI *uri);
 	int sql_disconnect(SQL *sql);
+	int sql_scheme_exists(const char *urischeme);
 
 	SQL_LANG sql_lang(SQL *sql);
 	SQL_VARIANT sql_variant(SQL *sql);
