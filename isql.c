@@ -554,7 +554,7 @@ exec_queries(History *hist)
 	
 	for(c = 0; c < pquery_count; c++)
 	{
-		history(hist, &ev, H_ADD, pqueries[c].query);
+		history(hist, &ev, H_ENTER, pqueries[c].query);
 		if(pqueries[c].query[0] == '\\')
 		{
 			exec_builtin(sql_conn, hist, pqueries[c].query);
@@ -605,6 +605,7 @@ main(int argc, char **argv)
 {
 	EditLine *el;
 	History *hist;
+	HistEvent ev;
 	const char *buf;
 	int num, state;
 	
@@ -627,6 +628,7 @@ main(int argc, char **argv)
 		"\n"
 		);
 	hist = history_init();
+	history(hist, &ev, H_SETSIZE, 100);
 	el = el_init(argv[0], stdin, stdout, stderr);
 	el_set(el, EL_EDITOR, "emacs");
 	el_set(el, EL_SIGNAL, 1);
