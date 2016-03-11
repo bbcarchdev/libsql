@@ -1,4 +1,7 @@
-/*
+/* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+ *
+ * Copyright 2015-2016 BBC
+ *
  * Copyright 2012-2013 Mo McRoberts.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -408,7 +411,7 @@ parse_query(const char *buf)
 						break;
 					}
 					qs = p;
-					query_state = 2;					
+					query_state = 2;
 					break;
 				case ';':
 					break;
@@ -559,6 +562,14 @@ exec_queries(History *hist)
 		{
 			exec_builtin(sql_conn, hist, pqueries[c].query);
 			continue;
+		}
+		if(pqueries[c].output_mode == 'G')
+		{
+			history(hist, &ev, H_ADD, "\\G");
+		}
+		else
+		{
+			history(hist, &ev, H_ADD, ";");
 		}
 		if(!sql_conn)
 		{
