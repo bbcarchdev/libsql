@@ -63,6 +63,7 @@ extern "C" {
 	SQL *sql_connect_uri(URI *uri);
 	int sql_disconnect(SQL *sql);
 	int sql_scheme_exists(const char *urischeme);
+	int sql_scheme_foreach(int (*fn)(const char *scheme, void *userdata), void *userdata);
 
 	int sql_set_userdata(SQL *restrict sql, void *restrict data);
 	void *sql_userdata(SQL *sql);

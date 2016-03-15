@@ -50,6 +50,26 @@ sql_scheme_exists(const char *urischeme)
 	return 0;
 }
 
+int
+sql_scheme_foreach(int (*fn)(const char *scheme, void *userdata), void *userdata)
+{
+#ifdef WITH_MYSQL
+	if(fn("mysql", userdata) ||
+		fn("mysqls", userdata))
+	{
+		return -1;
+	}
+#endif
+#ifdef WITH_LIBPQ
+	if(fn("pgsql", userdata) ||
+		fn("postgresql", userdata))
+	{
+		return -1;
+	}
+#endif
+	return 0;
+}
+
 SQL_ENGINE *
 sql_engine_(URI *uri)
 {
