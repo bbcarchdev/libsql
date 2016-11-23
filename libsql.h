@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright 2014-2015 BBC.
+ * Copyright 2014-2016 BBC.
  */
 
 /*
@@ -34,17 +34,26 @@ typedef int (*SQL_LOG_QUERY)(SQL *restrict sql, const char *query);
 typedef int (*SQL_LOG_ERROR)(SQL *restrict sql, const char *sqlstate, const char *message);
 typedef int (*SQL_LOG_NOTICE)(SQL *restrict sql, const char *notice);
 
+/* Return values for SQL_PERFORM_TXN */
+# define SQL_TXN_COMMIT                 1
+# define SQL_TXN_ROLLBACK               0
+# define SQL_TXN_RETRY                  -1
+# define SQL_TXN_ABORT                  -2
+
+/* sql_perform() transaction modes */
 typedef enum
 {
 	SQL_TXN_DEFAULT,
 	SQL_TXN_CONSISTENT
 } SQL_TXN_MODE;
 
+/* Known query languages */
 typedef enum
 {
 	SQL_LANG_SQL
 } SQL_LANG;
 
+/* Known SQL variants */
 typedef enum
 {
 	SQL_VARIANT_MYSQL,
