@@ -158,7 +158,6 @@ sql_sqlite_schema_select_version_(SQL *me, const char *identifier, size_t idlen,
 		return defver;
 	}
 	r = sqlite3_column_int(stmt, 0);
-	fprintf(stderr, "*** schema version = %d\n", r);
 	sqlite3_finalize(stmt);
 	return r;	
 }
