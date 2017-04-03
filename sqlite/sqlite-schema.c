@@ -29,12 +29,12 @@
 
 #define SCHEMA_SQL \
 	"CREATE TABLE IF NOT EXISTS \"_version\" (" \
-	"\"ident\" VARCHAR(64) NOT NULL COMMENT 'Module identifier', " \
-	"\"version\" BIGINT UNSIGNED NOT NULL COMMENT 'Current schema version'," \
-	"\"updated\" DATETIME NOT NULL COMMENT 'Timestamp of the last schema update'," \
-	"\"comment\" TEXT DEFAULT NULL COMMENT 'Description of the last update'," \
+	"\"ident\" TEXT NOT NULL, " \
+	"\"version\" INTEGER UNSIGNED NOT NULL, " \
+	"\"updated\" TEXT NOT NULL, " \
+	"\"comment\" TEXT DEFAULT NULL, " \
 	"PRIMARY KEY (\"ident\")" \
-	") ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE=utf8_unicode_ci"
+	")"
 
 static int sql_sqlite_schema_select_version_(SQL *me, const char *identifier, size_t idlen, int defver);
 
@@ -101,14 +101,13 @@ sql_sqlite_schema_set_version_(SQL *me, const char *identifier, int version)
 	{
 		strcpy(me->qbuf, "INSERT INTO \"_version\" (\"ident\", \"version\", \"updated\") VALUES ('");
 		p = strchr(me->qbuf, 0);
-		/* sql_sqlite_escape_(SQL *restrict me, const unsigned char *restrict from, size_t length, char *restrict buf, size_t buflen) */
 		sql_sqlite_escape_(me, (const unsigned char *) identifier, idlen, p, 128);
 		p = strchr(me->qbuf, 0);
-		sprintf(p, "', %d, NOW())", version);
+		sprintf(p, "', %d, datetime('now'))", version);
 	}
 	else
 	{
-		snprintf(me->qbuf, me->qbuflen, "UPDATE \"_version\" SET \"version\" = %d, \"updated\" = NOW() WHERE \"ident\" = '", version);
+		snprintf(me->qbuf, me->qbuflen, "UPDATE \"_version\" SET \"version\" = %d, \"updated\" = datetime('now') WHERE \"ident\" = '", version);
 		p = strchr(me->qbuf, 0);
 		sql_sqlite_escape_(me, (const unsigned char *) identifier, idlen, p, 128);
 		p = strchr(me->qbuf, 0);
@@ -155,11 +154,11 @@ sql_sqlite_schema_select_version_(SQL *me, const char *identifier, size_t idlen,
 	}
 	if(sqlite3_step(stmt) != SQLITE_ROW || !sqlite3_column_bytes(stmt, 0))
 	{
-		fprintf(stderr, "no row or empty row\n");
 		sqlite3_finalize(stmt);
 		return defver;
 	}
 	r = sqlite3_column_int(stmt, 0);
+	fprintf(stderr, "*** schema version = %d\n", r);
 	sqlite3_finalize(stmt);
 	return r;	
 }
