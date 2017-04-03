@@ -145,7 +145,8 @@ sql_sqlite_escape_(SQL *restrict me, const unsigned char *restrict from, size_t 
 		from++;
 		length--;
 	}
-	return (bp - buf);
+	*bp = 0;
+	return (bp - buf) + 1;
 }
 
 int
