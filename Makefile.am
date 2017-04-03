@@ -1,6 +1,6 @@
 ## Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
 ##
-## Copyright 2015 BBC
+## Copyright 2015-2017 BBC
 
 ## Copyright 2012-2013 Mo McRoberts.
 ##
@@ -18,7 +18,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-DIST_SUBDIRS = m4 libedit mysql postgres
+DIST_SUBDIRS = m4 libedit mysql postgres sqlite
 
 SUBDIRS = @subdirs@ @ENGINE_SUBDIRS@ .
 

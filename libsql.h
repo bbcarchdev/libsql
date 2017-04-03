@@ -57,7 +57,8 @@ typedef enum
 typedef enum
 {
 	SQL_VARIANT_MYSQL,
-	SQL_VARIANT_POSTGRES
+	SQL_VARIANT_POSTGRES,
+	SQL_VARIANT_SQLITE
 } SQL_VARIANT;
 
 # if (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L) && !defined(restrict)

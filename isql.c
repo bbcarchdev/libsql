@@ -47,7 +47,8 @@ struct query_struct
 	int output_mode;
 };
 
-static const char *short_program_name, *connect_uri;
+static const char *short_program_name;
+static URI *connect_uri;
 static int query_state = 0;
 static char *query_buf;
 static size_t query_len, query_alloc;
@@ -66,7 +67,8 @@ check_args(int argc, char **argv)
 {
 	char *t;
 	int c;
-	
+	URI *here;
+
 	connect_uri = NULL;
 	t = strrchr(argv[0], '/');
 	if(t)
@@ -96,7 +98,19 @@ check_args(int argc, char **argv)
 	}
 	if(argc == 1)
 	{
-		connect_uri = argv[0];
+		here = uri_create_cwd();
+		if(!here)
+		{
+			fprintf(stderr, "%s: failed to obtain URI for current working directory\n", short_program_name);
+		}
+		connect_uri = uri_create_str(argv[0], here);
+		if(!connect_uri)
+		{
+			uri_destroy(here);
+			fprintf(stderr, "%s: failed to parse URI <%s>\n", short_program_name, argv[0]);
+			return -1;
+		}
+		uri_destroy(here);
 	}
 	return 0;
 }
@@ -137,6 +151,7 @@ show_results(SQL_STATEMENT *rs)
 	max = 0;
 	fields = (SQL_FIELD **) calloc(cols, sizeof(SQL_FIELD *));
 	widths = (size_t *) calloc(cols, sizeof(size_t));
+	/* Determine the widths of the columns and print top border */	
 	putchar('+');	
 	for(c = 0; c < cols; c++)
 	{
@@ -163,6 +178,7 @@ show_results(SQL_STATEMENT *rs)
 	}
 	fbuf = (char *) malloc(max + 1);
 	putchar('\n');
+	/* Print the header row */
 	putchar('|');
 	for(c = 0; c < cols; c++)
 	{
@@ -178,6 +194,7 @@ show_results(SQL_STATEMENT *rs)
 		putchar('|');
 	}
 	putchar('\n');
+	/* Print the header border */
 	putchar('+');
 	for(c = 0; c < cols; c++)
 	{
@@ -188,6 +205,7 @@ show_results(SQL_STATEMENT *rs)
 		putchar('+');
 	}
 	putchar('\n');
+	/* Print each row of the results */
 	while(!sql_stmt_eof(rs))
 	{
 		putchar('|');
@@ -214,7 +232,7 @@ show_results(SQL_STATEMENT *rs)
 				{
 					len--;
 				}
-			}
+			}			
 			for(d = 0; d < widths[c]; d++)
 			{
 				if(d < len)
@@ -233,6 +251,7 @@ show_results(SQL_STATEMENT *rs)
 		sql_stmt_next(rs);
 	}
 	putchar('+');
+	/* Print the bottom border */
 	for(c = 0; c < cols; c++)
 	{
 		for(d = 0; d < widths[c] + 2; d++)
@@ -242,6 +261,7 @@ show_results(SQL_STATEMENT *rs)
 		putchar('+');
 	}
 	putchar('\n');
+	/* Free resources */
 	for(c = 0; c < cols; c++)
 	{
 		sql_field_destroy(fields[c]);
@@ -257,9 +277,8 @@ show_results_long(SQL_STATEMENT *rs)
 {
 	unsigned int cols, c;
 	unsigned long long row;
-	size_t max, w, len, maxname;
+	size_t w, maxname;
 	SQL_FIELD **fields;
-	char *fbuf;
 	const char *n;
 	char fmt[64];
 	
@@ -269,16 +288,10 @@ show_results_long(SQL_STATEMENT *rs)
 		return 0;
 	}
 	fields = (SQL_FIELD **) calloc(cols, sizeof(SQL_FIELD *));
-	max = 0;
-	maxname = 0;
+	maxname = 10;
 	for(c = 0; c < cols; c++)
 	{
 		fields[c] = sql_stmt_field(rs, c);
-		w = sql_field_width(fields[c]);
-		if(w > max)
-		{
-			max = w;
-		}
 		n = sql_field_name(fields[c]);
 		w = strlen(n);
 		if(w > maxname)
@@ -294,7 +307,6 @@ show_results_long(SQL_STATEMENT *rs)
 	{
 		strcpy(fmt, "%s: ");
 	}
-	fbuf = (char *) malloc(max + 1);
 	row = 0;
 	while(!sql_stmt_eof(rs))
 	{
@@ -309,16 +321,7 @@ show_results_long(SQL_STATEMENT *rs)
 			}
 			else
 			{
-				len = sql_stmt_value(rs, c, fbuf, max + 1);			
-				if(len == (size_t) - 1)
-				{
-					len = 0;
-				}
-				for(w = 0; w < len; w++)
-				{
-					putchar(fbuf[w]);
-				}
-				putchar('\n');
+				puts(sql_stmt_str(rs, c));
 			}
 		}
 		sql_stmt_next(rs);
@@ -327,7 +330,6 @@ show_results_long(SQL_STATEMENT *rs)
 	{
 		sql_field_destroy(fields[c]);
 	}
-	free(fbuf);
 	free(fields);
 	return 0;
 }
@@ -513,6 +515,8 @@ parse_query(const char *buf)
 static int
 exec_builtin(SQL *conn, History *hist, char *query)
 {
+	URI *here, *uri;
+
 	(void) conn;
 	(void) hist;
 	
@@ -529,7 +533,22 @@ exec_builtin(SQL *conn, History *hist, char *query)
 			printf("[08000] Specify \"\\c URI\" to establish a new connection\n");
 			return -1;
 		}
-		conn = sql_connect(query);
+		here = uri_create_cwd();
+		if(!here)
+		{
+			printf("[08800] failed to obtain URI for current working directory\n");
+			return -1;
+		}
+		uri = uri_create_str(query, here);
+		if(!uri)
+		{
+			uri_destroy(here);
+			printf("[08801] failed to parse URI <%s>\n", query);
+			return -1;
+		}
+		uri_destroy(here);
+		conn = sql_connect_uri(uri);
+		uri_destroy(uri);
 		if(!conn)
 		{
 			printf("[%s] %s\n", sql_sqlstate(NULL), sql_error(NULL));
@@ -622,8 +641,10 @@ main(int argc, char **argv)
 	
 	check_args(argc, argv);
 	if(connect_uri)
-	{
-		sql_conn = sql_connect(connect_uri);
+	{		
+		sql_conn = sql_connect_uri(connect_uri);
+		uri_destroy(connect_uri);
+		connect_uri = NULL;
 		if(!sql_conn)
 		{
 			fprintf(stderr, "%s: [%s] %s\n", short_program_name, sql_sqlstate(NULL), sql_error(NULL));

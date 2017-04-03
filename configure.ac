@@ -1,6 +1,6 @@
 ## Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
 ##
-## Copyright (c) 2015 BBC
+## Copyright (c) 2015-2017 BBC
 
 ## Copyright 2012-2013 Mo McRoberts.
 ##
@@ -66,6 +66,10 @@ else
 	engine_postgres="no"
 fi
 
+engine_sqlite="yes"
+ENGINE_SUBDIRS="$ENGINE_SUBDIRS sqlite"
+ENGINE_LIBS="$ENGINE_LIBS sqlite/libsqlite-engine.la"
+
 AC_SUBST([ENGINE_LIBS])
 AC_SUBST([ENGINE_SUBDIRS])
 AC_SUBST([ENGINE_DEPLIBS])
@@ -77,6 +81,7 @@ AC_CONFIG_FILES([Makefile
 m4/Makefile
 mysql/Makefile
 postgres/Makefile
+sqlite/Makefile
 libsql.pc
 libsql-uninstalled.pc
 ])
@@ -89,5 +94,6 @@ enabling engines:
 
            mysql ... $engine_mysql
         postgres ... $engine_postgres
+          sqlite ... $engine_sqlite
 
 ])
