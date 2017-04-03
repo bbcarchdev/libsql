@@ -94,10 +94,11 @@ sql_statement_sqlite_free_(SQL_STATEMENT *me)
 		{
 			if(me->fields[c])
 			{
-				me->fields[c]->api->release(me->fields[c]);
 				me->fields[c]->stmt = NULL;
+				me->fields[c]->api->release(me->fields[c]);
 			}
 		}
+		free(me->fields);
 	}
 	free(me);
 	return 0;
@@ -132,8 +133,8 @@ sql_statement_sqlite_set_results_(SQL_STATEMENT *restrict me, void *data)
 	{
 		for(c = 0; me->fields[c]; c++)
 		{
-			me->fields[c]->api->release(me->fields[c]);
 			me->fields[c]->stmt = NULL;
+			me->fields[c]->api->release(me->fields[c]);
 		}
 		me->fields = NULL;
 	}
