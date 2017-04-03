@@ -71,21 +71,15 @@ sql_sqlite_begin_(SQL *me, SQL_TXN_MODE mode)
 {
 	const char *st;
 	
+	(void) mode;
+
 	if(me->depth)	
 	{
 		/* Can't nest transactions */
 		sql_sqlite_set_error_(me, "25000", "You are not allowed to execute this command in a transaction");
 		return -1;
 	}
-	switch(mode)
-	{
-	case SQL_TXN_CONSISTENT:
-		st = "START TRANSACTION WITH CONSISTENT SNAPSHOT";
-		break;
-	default:
-		st = "START TRANSACTION";
-		break;
-	}
+	st = "BEGIN TRANSACTION";
 	if(me->querylog)
 	{
 		me->querylog(me, st);
