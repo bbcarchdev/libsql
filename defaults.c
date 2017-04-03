@@ -67,6 +67,7 @@ sql_engine_def_queryinterface_(SQL_ENGINE *restrict me, uuid_t *restrict uuid, v
 {
 	if(!uuid_compare(*uuid, sql_uuid_unknown) || !uuid_compare(*uuid, sql_uuid_engine))
 	{
+		me->api->addref(me);
 		*out = me;
 		return 0;
 	}
@@ -99,6 +100,7 @@ sql_def_queryinterface_(SQL *restrict me, uuid_t *restrict uuid, void *restrict 
 	if(!uuid_compare(*uuid, sql_uuid_unknown) || !uuid_compare(*uuid, sql_uuid_sql))
 	{
 		*out = me;
+		me->api->addref(me);
 		return 0;
 	}
 	*out = NULL;
@@ -139,6 +141,7 @@ sql_statement_def_queryinterface_(SQL_STATEMENT *restrict me, uuid_t *restrict u
 {
 	if(!uuid_compare(*uuid, sql_uuid_unknown) || !uuid_compare(*uuid, sql_uuid_statement))
 	{
+		me->api->addref(me);
 		*out = me;
 		return 0;
 	}
