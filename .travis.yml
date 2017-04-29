@@ -1,6 +1,8 @@
 language: c
 compiler: clang
 before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -qq apt-transport-https ca-certificates
 - curl https://raw.githubusercontent.com/bbcarchdev/bbcarchdev-keys/develop/bbcarchdev-apt.asc | sudo apt-key add -
 - echo "deb https://apt.bbcarchdev.net/debian stable main port dev stage live" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
