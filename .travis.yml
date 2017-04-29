@@ -8,5 +8,3 @@ before_install:
 - sudo apt-get install -qq libedit-dev uuid-dev liburi-dev libmysqlclient-dev libpq-dev libsqlite3-dev
 before_script:
 - autoreconf -f -i
-script:
-- ./configure && make && make check
