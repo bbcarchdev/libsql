@@ -2,7 +2,7 @@ language: c
 compiler: clang
 before_install:
 - curl https://raw.githubusercontent.com/bbcarchdev/bbcarchdev-keys/develop/bbcarchdev-apt.asc | sudo apt-key add -
-- echo "deb http://apt.bbcarchdev.net/debian stable develop stage main live ports" | sudo tee -a /etc/apt/sources.list
+- echo "deb https://apt.bbcarchdev.net/debian stable main port dev stage live" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 - sudo apt-get install -qq automake autoconf libtool pkg-config
 - sudo apt-get install -qq libedit-dev uuid-dev liburi-dev libmysqlclient-dev libpq-dev libsqlite3-dev
