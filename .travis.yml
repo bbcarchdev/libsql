@@ -1,8 +1,7 @@
 language: c
 compiler: clang
 before_install:
-- sudo apt-get install -qq apt-transport-https ca-certificates
-- curl https://letsencrypt.org/certs/isrgrootx1.pem.txt | sudo tee /etc/ssl/certs/isgrootx1.crt
+- curl https://letsencrypt.org/certs/isrgrootx1.pem.txt | sudo tee /usr/share/ca-certificates/isgrootx1.crt
 - echo "isrgrootx1.crt" | sudo tee -a /etc/ca-certificates.conf
 - sudo update-ca-certificates
 - curl https://raw.githubusercontent.com/bbcarchdev/bbcarchdev-keys/main/bbcarchdev-apt.asc | sudo apt-key add -
