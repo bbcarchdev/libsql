@@ -12,3 +12,5 @@ before_install:
 - sudo apt-get install -qq liburi-dev automake autoconf libtool pkg-config libedit-dev uuid-dev libmysqlclient-dev libpq-dev libsqlite3-dev
 before_script:
 - autoreconf -f -i
+script:
+- configure && make && make check
