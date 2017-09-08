@@ -39,6 +39,7 @@ typedef int (*SQL_LOG_NOTICE)(SQL *restrict sql, const char *notice);
 # define SQL_TXN_ROLLBACK               0
 # define SQL_TXN_RETRY                  -1
 # define SQL_TXN_ABORT                  -2
+# define SQL_TXN_FAIL                   -3
 
 /* sql_perform() transaction modes */
 typedef enum

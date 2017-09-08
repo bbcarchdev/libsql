@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright 2014-2015 BBC.
+ * Copyright 2014-2017 BBC.
  */
 
 /*
@@ -282,39 +282,43 @@ sql_rollback(SQL *sql)
  *
  * Possible return values from the callback:
  *
- *    0      Rollback and return success
- *   -1      Rollback and retry
- *   -2      Rollback and abort
- *    1      Commit
+ *    SQL_TXN_ROLLBACK      Roll back and return success
+ *    SQL_TXN_RETRY         Roll back and retry
+ *    SQL_TXN_ABORT         Roll back and abort
+ *    SQL_TXN_FAIL          Roll back and retry if a deadlock is detected,
+ *                          otherwise abort
+ *    SQL_TXN_COMMIT        Commit, retrying if a deadlock is detected
  *
- * Note that because a deadlock may not be detected until commit-time,
- * the callback returning 1 does not guarantee that it won't be invoked again.
- *
- * As pseudocode, sql_perform is:
+ * As pseudocode, sql_perform() is:
  *
  * count := 0
  * while (maxretries < 0 or count < maxretries)
-     count := count + 1
+ *   count := count + 1
  *   BEGIN
  *   r := invoke callback
- *   // r == 0: rollback and return success
- *   if r == 0
+ *   if r == SQL_TXN_ROLLBACK
  *     ROLLBACK
  *     return 0
  *   end if
- *   // r == -2: rollback and abort
- *   if r == -2
+ *   if r == SQL_TXN_ABORT
  *     ROLLBACK
  *     return -1
  *   end if
- *   // r == 1: commit
- *   if r == 1 and a deadlock was not detected
+ *   if r == SQL_TXN_FAIL and a deadlock was not detected
+ *     ROLLBACK
+ *     return -1
+ *   end if
+ *   if r == SQL_TXN_COMMIT
  *     COMMIT
  *     if successfully committed
  *       return 0
  *     end if
+ *     if a deadlock was not detected
+ *       return -1
+ *     end if
  *   end if
  *   ROLLBACK
+ *   // try again until the retry count reaches maxretries
  * end while
  */
 int
@@ -331,18 +335,30 @@ sql_perform(SQL *restrict sql, SQL_PERFORM_TXN fn, void *restrict userdata, int 
 			return -1;
 		}
 		r = fn(sql, userdata);
-		if(r == 0 || r == -2)
+		if(r == SQL_TXN_ROLLBACK || r == SQL_TXN_ABORT)
 		{
+			/* Roll back with success or roll back and abort */
 			sql_rollback(sql);
-			return (r == 0 ? 0 : -1);
+			return (r == SQL_TXN_ROLLBACK ? 0 : -1);
 		}
-		if(r == 1 && !sql->api->deadlocked(sql))
+		if(r == SQL_TXN_FAIL && !sql->api->deadlocked(sql))
+		{
+			/* Hard failure within the callback */
+			sql_rollback(sql);
+			return -1;
+		}
+		if(r == SQL_TXN_COMMIT)
 		{
 			if(!sql_commit(sql))
 			{
 				/* Successfully commited */
 				return 0;
-			}			
+			}
+			if(!sql->api->deadlocked(sql))
+			{
+				/* Hard failure */
+				return -1;
+			}
 		}
 		/* Try again */
 		sql_rollback(sql);
