@@ -1,6 +1,6 @@
 /* Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2015 BBC
+ * Copyright (c) 2015-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,13 +120,13 @@ sql_pg_copy_error_(SQL *restrict me, PGresult *restrict result)
 	const char *err;
 	
 	sqlstate = PQresultErrorField(result, PG_DIAG_SQLSTATE);
+	err = PQerrorMessage(me->pg);
+	sql_pg_set_error_(me, sqlstate, err);
 	if(!strcmp(sqlstate, "40001") || !strcmp(sqlstate, "40P01"))
 	{
 		me->deadlocked = 1;
 		PQreset(me->pg);
 	}
-	err = PQerrorMessage(me->pg);
-	sql_pg_set_error_(me, sqlstate, err);
 }
 
 size_t
